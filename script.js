@@ -8,88 +8,187 @@ hamburger.addEventListener("click", function () {
   navbarMenu.classList.toggle("toggle-nav");
   navbarButton.classList.toggle("toggle-nav");
 });
+// end hamburher
 
+// faq
 faqs.forEach((faq) => {
   faq.addEventListener("click", function () {
     this.classList.toggle("active");
   });
 });
+// end faq
 
-// slider
-const slideList = document.querySelector(".slider-list");
-const slideButtons = document.querySelectorAll(".slide-button");
-const containerSlider = document.querySelectorAll(".container-slider");
-const reviewSlider = document.querySelector(".review-slider");
-let maxScrollLeft = slideList.scrollWidth - slideList.clientWidth;
-window.addEventListener("resize", () => {
-  maxScrollLeft = slideList.scrollWidth - slideList.clientWidth;
-});
+// slider and pagination
+const sliderList = document.querySelector(".slider-list");
+const leftArrow = document.querySelector("#prev-slide");
+const rightArrow = document.querySelector("#next-slide");
+const indicatorParents = document.querySelector(".slider-thumb");
 
-let isAnimating = false;
+let containerSliderIndex = 0;
+let autoSlideInterval = null;
+let autoSlideActive = true;
 
-slideButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    if (isAnimating) return;
-    isAnimating = true;
+function startAutoSlide() {
+  autoSlideInterval = setInterval(() => {
+    containerSliderIndex =
+      containerSliderIndex < 3 ? containerSliderIndex + 1 : 0;
+    changeSlide(containerSliderIndex);
+  }, 2000);
+}
 
-    const direction = button.id === "prev-slide" ? -1 : 1;
-    const scrollAmount = slideList.clientWidth * direction;
+function stopAutoSlide() {
+  clearInterval(autoSlideInterval);
+}
 
-    reviewSlider.scrollBy({
-      left: scrollAmount,
-      behavior: "smooth",
-    });
+function changeSlide(index) {
+  document.querySelector(".selected").classList.remove("selected");
+  indicatorParents.children[index].classList.add("selected");
+  sliderList.style.transform = "translate(" + index * -25 + "%)";
+  containerSliderIndex = index;
+}
 
-    setTimeout(() => {
-      isAnimating = false;
-    }, 700);
-
-    if (reviewSlider.scrollLeft === maxScrollLeft && direction === 1) {
-      reviewSlider.scrollBy({
-        left: -scrollAmount * containerSlider.length,
-        behavior: "smooth",
-      });
-    } else if (reviewSlider.scrollLeft === 0 && direction === -1) {
-      reviewSlider.scrollBy({
-        left: Math.abs(scrollAmount * containerSlider.length),
-        behavior: "smooth",
-      });
-    }
-  });
-});
-
-const handleSlideButtons = () => {
-  slideButtons[0].style.display = slideList.scrollLeft <= 0 ? "none" : "block";
-  slideButtons[1].style.display =
-    slideList.scrollLeft >= maxScrollLeft ? "none" : "block";
-};
-
-slideList.addEventListener("scroll", () => {
-  handleSlideButtons();
-});
-
-function autoScrollLeft() {
-  if (isAnimating) return;
-  isAnimating = true;
-
-  const scrollAmount = slideList.clientWidth; // Jarak yang akan discroll
-  const direction = -1; // Arah scroll (ke kiri)
-
-  reviewSlider.scrollBy({
-    left: scrollAmount * direction,
-    behavior: "smooth",
-  });
-
-  setTimeout(() => {
-    isAnimating = false;
-  }, 700);
-
-  if (reviewSlider.scrollLeft === 0 && direction === -1) {
-    reviewSlider.scrollBy({
-      left: Math.abs(scrollAmount * containerSlider.length),
-      behavior: "smooth",
-    });
+function handleIndicatorClick(e, i) {
+  document.querySelector(".selected").classList.remove("selected");
+  e.classList.add("selected");
+  sliderList.style.transform = "translate(" + i * -25 + "%)";
+  containerSliderIndex = i;
+  if (autoSlideActive) {
+    stopAutoSlide();
+    startAutoSlide();
   }
 }
 
-setInterval(autoScrollLeft, 1000);
+document.querySelectorAll(".slider-thumb .bar").forEach(function (e, i) {
+  e.addEventListener("click", function () {
+    handleIndicatorClick(e, i);
+  });
+});
+
+rightArrow.addEventListener("click", () => {
+  stopAutoSlide();
+  containerSliderIndex =
+    containerSliderIndex < 3 ? containerSliderIndex + 1 : 0;
+  changeSlide(containerSliderIndex);
+  startAutoSlide();
+});
+
+leftArrow.addEventListener("click", () => {
+  stopAutoSlide();
+  containerSliderIndex =
+    containerSliderIndex > 0 ? containerSliderIndex - 1 : 3;
+  changeSlide(containerSliderIndex);
+  startAutoSlide();
+});
+
+startAutoSlide();
+// end slider
+
+// Animation Trigger
+gsap.registerPlugin(ScrollTrigger);
+
+// hero
+gsap.to(".to-top-hero", {
+  scrollTrigger: {
+    trigger: ".to-top-hero",
+    start: "top 80%",
+    end: "bottom top",
+  },
+  y: 0,
+  duration: 1,
+  opacity: 1,
+  stagger: 0.3,
+});
+
+gsap.to(".to-rotate", {
+  rotation: 120,
+  duration: 1,
+  zIndex: -999,
+  scale: 1,
+  scrollTrigger: {
+    trigger: ".to-rotate",
+    start: "top 80%",
+    end: "bottom top",
+  },
+});
+
+// business section
+gsap.to(".business-section", {
+  scrollTrigger: ".business-section",
+  y: 0,
+  opacity: 1,
+});
+
+gsap.to(".to-top-business", {
+  scrollTrigger: ".to-top-business",
+  y: 0,
+  duration: 0.5,
+  opacity: 1,
+  stagger: {
+    each: 0.5,
+  },
+});
+
+gsap.to(".to-top-container-frame", {
+  scrollTrigger: ".to-top-container-frame",
+  y: 0,
+  duration: 0.5,
+  opacity: 1,
+  stagger: {
+    each: 0.2,
+  },
+});
+
+// mobile section
+gsap.to(".to-top-mobile-section", {
+  scrollTrigger: ".to-top-mobile-section",
+  y: 0,
+  duration: 0.5,
+  opacity: 1,
+  stagger: {
+    each: 0.3,
+  },
+});
+
+gsap.to(".mastercard-container", {
+  scrollTrigger: ".mastercard-container",
+  y: 0,
+  duration: 0.6,
+  opacity: 1,
+});
+
+gsap.to(".mastercard-content-top", {
+  scrollTrigger: ".mastercard-content-top",
+  y: 0,
+  duration: 0.6,
+  opacity: 1,
+});
+
+gsap.to(".mastercard-content-bottom", {
+  scrollTrigger: ".mastercard-content-top",
+  y: 0,
+  duration: 0.6,
+  opacity: 1,
+  delay: 0.6,
+});
+
+document.querySelectorAll(".to-top").forEach((top, index) => {
+  gsap.to(top, {
+    y: 0,
+    duration: 0.6,
+    opacity: 1,
+    scrollTrigger: {
+      trigger: top,
+    },
+  });
+});
+
+document.querySelectorAll(".to-left").forEach((left, index) => {
+  gsap.to(left, {
+    x: 0,
+    duration: 0.9,
+    opacity: 1,
+    scrollTrigger: {
+      trigger: left,
+    },
+  });
+});
