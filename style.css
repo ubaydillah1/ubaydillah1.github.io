@@ -151,6 +151,7 @@ body {
 /* end navbar */
 
 /* Hero Section */
+
 .hero {
   max-width: 971px;
   margin: auto;
@@ -209,10 +210,19 @@ body {
   box-shadow: 12px 12px black;
 }
 
+.container-rotate-animation {
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  height: 120vh;
+  overflow: hidden;
+  z-index: -1;
+}
+
 .ornament-position {
   position: absolute;
-  bottom: -100px;
-  right: 14%;
+  bottom: 20px;
+  right: 20%;
   z-index: -1;
 }
 
@@ -1028,8 +1038,7 @@ body {
 
   .ornament-position {
     position: absolute;
-    bottom: -400px;
-
+    bottom: -100px;
     z-index: -1;
   }
 
@@ -1233,11 +1242,18 @@ body {
 /* landsceape section */
 @media screen and (max-width: 544px) {
   /* hero section */
-
   .content-hero {
     margin: 0;
   }
+
+  .ornament-position {
+    position: absolute;
+    right: 5%;
+    bottom: -150px;
+    z-index: -1;
+  }
   /* end hero section */
+
   /* business section */
   .content-white-box p {
     font-size: 33px;
